@@ -4,13 +4,16 @@ Creates pastel-colored, Italian-looking palazzi.
 
 They look like this:
 
-![](https://i.imgur.com/8aY6zPXl.png)
+![](https://i.imgur.com/7wd4Iq2.png)
 
-![](https://i.imgur.com/8JNcQsHl.png)
+![](https://i.imgur.com/NtYrDoY.png)
 
-![](https://i.imgur.com/rGzl0pll.png)
+![](https://i.imgur.com/nKbLyN1.png)
 
-![](https://i.imgur.com/JOW4gQnl.png)
+![](https://i.imgur.com/LB8s1SM.png)
+
+![](https://i.imgur.com/cktL0je.png)
+
 
 ## Todo
 
