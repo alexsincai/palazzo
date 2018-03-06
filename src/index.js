@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+	saveSvgAsPng
+} from 'save-svg-as-png';
 
 import './index.css';
 
@@ -17,6 +20,7 @@ class Palazzo extends React.Component {
 		width: 4,
 		stairs: false,
 		roof: 1,
+		towers: 0,
 		floors: [ {
 			columns: false,
 			balcony: false,
@@ -30,6 +34,15 @@ class Palazzo extends React.Component {
 			windows: 1,
 			windowsType: 1
 		} ],
+		towerProps: {
+			floors: 1,
+			stairs: true,
+			columns: false,
+			balcony: false,
+			windows: 1,
+			windowsType: 1,
+			roof: 1,
+		}
 	}
 
 	update = {
@@ -63,16 +76,40 @@ class Palazzo extends React.Component {
 				s[ n ] = arr;
 			} );
 			this.setState( s );
+		},
+		towerProps: ( e ) => {
+			let s = this.state;
+			let t = e.target;
+			s.towerProps[ t.dataset.name ] = t.type === 'range' ? Number( t.value ) : Boolean( t.checked );
+			this.setState( s );
 		}
+	}
+
+	save = ( e ) => {
+		let svg = document.querySelector( 'svg' );
+		let rect = svg.getBBox();
+		let maxDim = Math.max( window.outerWidth, window.outerHeight );
+		let scale = Math.round( maxDim / Math.max( rect.width, rect.height ) );
+
+		saveSvgAsPng( svg, 'palazzo.png', {
+			scale
+		} );
 	}
 
 	render() {
 		let maxFloorWindows = 1 + ( this.state.width * 2 );
 		let maxFacadeWindows = 1 + ( this.state.facadeWidth * 2 );
+		let maxTowers = ( this.state.width * 2 ) - 1;
+
+		let towers = maxTowers <= this.state.towers ? maxTowers : this.state.towers;
 
 		return (
 			<div>
-        <button className="editing" onClick={ (e) => this.setState({ editing: !this.state.editing }) }>Edit</button>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <circle fill="red" r="20" cx="50" cy="50"></circle>
+        </svg>
+        <button className="edit" onClick={ (e) => this.setState({ editing: !this.state.editing }) }>Edit</button>
+        <button className="save" onClick={ this.save }>Save PNG</button>
         { this.state.editing && (
           <div className="editing">
             <Group on name="Building">
@@ -82,6 +119,7 @@ class Palazzo extends React.Component {
               <Range name="roof" min="0" max="4" value={ this.state.roof } func={ this.update.building } />
               <Range name="floors" min="1" max="4" value={ this.state.floors.length } func={ this.update.floorCount } />
               <Range name="facadeWidth" min="0" max="3" value={ this.state.facadeWidth } func={ this.update.building } />
+              <Range name="towers" min="0" max={ maxTowers } value={ towers } func={ this.update.building } />
             </Group>
             { this.state.floors.map( ( f, ff ) => (
               <Group key={ ff } name={ `Floor ${ ff + 1 }` }>
@@ -91,7 +129,7 @@ class Palazzo extends React.Component {
                 <Range set="floors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors }/>
               </Group>
             ) ) }
-            { this.state.facadeFloors.map( ( f, ff ) => (
+            { this.state.facadeWidth > 0 && this.state.facadeFloors.map( ( f, ff ) => (
               <Group key={ ff } name={ `Facade floor ${ ff + 1 }` }>
                 <Check set="facadeFloors" name="columns" index={ ff } value={ f.columns } func={ this.update.floors } />
                 <Check set="facadeFloors" name="balcony" index={ ff } value={ f.balcony } func={ this.update.floors } />
@@ -99,6 +137,17 @@ class Palazzo extends React.Component {
                 <Range set="facadeFloors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors }/>
               </Group>
             ) ) }
+            { this.state.towers > 0 && (
+              <Group name="Towers">
+                <Range name="floors" min="1" max="4" value={ this.state.towerProps.floors } func={ this.update.towerProps } />
+                <Check name="stairs" value={ this.state.towerProps.stairs } func={ this.update.towerProps } />
+                <Check name="columns" value={ this.state.towerProps.columns } func={ this.update.towerProps } />
+                <Check name="balcony" value={ this.state.towerProps.balcony } func={ this.update.towerProps } />
+                <Range name="windows" min="0" max="5" value={ this.state.towerProps.windows } func={ this.update.towerProps } />
+                <Range name="windowsType" min="1" max="5" value={ this.state.towerProps.windowsType } func={ this.update.towerProps } />
+                <Range name="roof" min="0" max="3" value={ this.state.towerProps.roof } func={ this.update.towerProps } />
+              </Group>
+            ) }
           </div>
         ) }
       </div>

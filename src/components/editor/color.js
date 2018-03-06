@@ -1,5 +1,4 @@
 import React from 'react';
-import util from '../../util';
 
 const Color = ( props ) => {
 	let {
@@ -15,8 +14,8 @@ const Color = ( props ) => {
         <span className="box" style={{ backgroundColor: light }}></span>
         <span className="box" style={{ backgroundColor: mid }}></span>
         <span className="box" style={{ backgroundColor: dark }}></span>
-        <input type="color" defaultValue={ color } onChange={ props.func }/>
       </span>
+      <input type="color" defaultValue={ color } onChange={ props.func }/>
     </label>
 	);
 }
