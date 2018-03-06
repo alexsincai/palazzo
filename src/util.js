@@ -1,4 +1,5 @@
 const util = {
+	upper: ( text ) => text.substr( 0, 1 ).toUpperCase() + text.substr( 1 ),
 	map: ( v, im = 0, ix = 1, om = 1, ox = 100 ) => ( v - im ) * ( ox - om ) / ( ix - im ) + om,
 	round: ( v, d = 3 ) => Math.floor( v * Math.pow( 10, d ) ) / Math.pow( 10, d ),
 	clean: ( text ) => text.replace( /\s+/g, ' ' ).trim(),
