@@ -27,14 +27,14 @@ class Palazzo extends React.Component {
 		roof: 1,
 		floors: [ {
 			columns: false,
-			balcony: true,
+			balcony: false,
 			windows: 1,
 			windowsType: 1
 		} ],
 		facadeWidth: 0,
 		facadeFloors: [ {
-			columns: true,
-			balcony: false,
+			columns: false,
+			balcony: true,
 			windows: 1,
 			windowsType: 1
 		} ],
@@ -101,12 +101,49 @@ class Palazzo extends React.Component {
 		} );
 	}
 
+	randomize = ( e ) => {
+		let floors = util.random( 1, 4 );
+
+		let w = util.random( 3, 9 );
+		let f = util.random( 0, 3 );
+
+		let s = {
+			color: util.generateRandomColor(),
+			width: w,
+			stairs: !!util.random( 0, 1 ),
+			roof: util.random( 0, 3 ),
+			facadeWidth: f,
+			floors: [],
+			facadeFloors: []
+		}
+
+		for ( let i = 0; i < floors; i++ ) {
+			s.floors.push( {
+				columns: !!util.random( 0, 1 ),
+				balcony: !!util.random( 0, 1 ),
+				windows: util.random( 0, 4 ),
+				windowsType: util.random( 1, 5 )
+			} );
+			s.facadeFloors.push( {
+				columns: !!util.random( 0, 1 ),
+				balcony: !!util.random( 0, 1 ),
+				windows: util.random( 0, 4 ),
+				windowsType: util.random( 1, 5 )
+			} );
+		}
+
+		// console.log( ww, fw )
+
+		this.setState( s );
+	}
+
 	render() {
-		let maxFloorWindows = 1 + ( this.state.width * 2 );
-		let maxFacadeWindows = 1 + ( this.state.facadeWidth * 2 );
 		let maxTowers = ( this.state.width * 2 ) - 1;
 
 		let towers = maxTowers <= this.state.towers ? maxTowers : this.state.towers;
+
+		let floorWindows = util.minmax( 1 + ( this.state.width * 2 ) );
+		let facadeWindows = util.minmax( 1 + ( this.state.facadeWidth * 2 ) );
 
 		return (
 			<div>
@@ -114,6 +151,9 @@ class Palazzo extends React.Component {
           <Defs
             unit={ unit }
             floorWidth={ this.state.width }
+            floorId="building"
+            facadeWidth={ this.state.facadeWidth }
+            facadeId="facade"
             light={ this.state.color.light }
             dark={ this.state.color.dark }
           />
@@ -126,8 +166,10 @@ class Palazzo extends React.Component {
             stairs={ this.state.stairs }
             roof={ this.state.roof }
             floors={ this.state.floors }
+            floorWindows={ floorWindows }
             facade={ this.state.facadeWidth }
             facadeFloors={ this.state.facadeFloors }
+            facadeWindows={ facadeWindows }
             towers={ this.state.towers }
             towerProps={ this.state.towerProps }
           />
@@ -137,29 +179,29 @@ class Palazzo extends React.Component {
           <button onClick={ this.randomize }>Randomize</button>
           <button onClick={ this.save }>Save PNG</button>
         </div>
-        <div className="editing hidden">
+        <div className={ `editing ${ this.state.editing ? '' : 'hidden' }` }>
           <Group on name="Building">
             <Color color={ this.state.color } func={ this.update.color }></Color>
             <Range name="width" min="1" max="9" value={ this.state.width } func={ this.update.building } />
             <Check name="stairs" value={ this.state.stairs } func={ this.update.building } />
-            <Range name="roof" min="0" max="4" value={ this.state.roof } func={ this.update.building } />
+            <Range name="roof" min="0" max="3" value={ this.state.roof } func={ this.update.building } />
             <Range name="floors" min="1" max="4" value={ this.state.floors.length } func={ this.update.floorCount } />
             <Range name="facadeWidth" min="0" max="3" value={ this.state.facadeWidth } func={ this.update.building } />
-            <Range name="towers" min="0" max={ maxTowers } value={ towers } func={ this.update.building } />
+            {/* <Range name="towers" min="0" max={ maxTowers } value={ towers } func={ this.update.building } /> */}
           </Group>
           { this.state.floors.map( ( f, ff ) => (
             <Group key={ ff } name={ `Floor ${ ff + 1 }` }>
               <Check set="floors" name="columns" index={ ff } value={ f.columns } func={ this.update.floors } />
               <Check set="floors" name="balcony" index={ ff } value={ f.balcony } func={ this.update.floors } />
-              <Range set="floors" name="windows" index={ ff } min="0" max={ maxFloorWindows } value={ Math.min(f.windows, maxFloorWindows) } func={ this.update.floors }/>
-              <Range set="floors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors }/>
+              <Range display={ floorWindows } set="floors" name="windows" index={ ff } min="0" max={ floorWindows.length - 1 } value={ Math.min( f.windows, floorWindows.length - 1 ) } func={ this.update.floors } />
+              <Range set="floors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors } />
             </Group>
           ) ) }
           { this.state.facadeWidth > 0 && this.state.facadeFloors.map( ( f, ff ) => (
             <Group key={ ff } name={ `Facade floor ${ ff + 1 }` }>
               <Check set="facadeFloors" name="columns" index={ ff } value={ f.columns } func={ this.update.floors } />
               <Check set="facadeFloors" name="balcony" index={ ff } value={ f.balcony } func={ this.update.floors } />
-              <Range set="facadeFloors" name="windows" index={ ff } min="0" max={ maxFacadeWindows } value={ Math.min(f.windows, maxFacadeWindows) } func={ this.update.floors }/>
+              <Range display={ facadeWindows } set="facadeFloors" name="windows" index={ ff } min="0" max={ facadeWindows.length - 1 } value={ Math.min( f.windows, facadeWindows.length - 1 ) } func={ this.update.floors } />
               <Range set="facadeFloors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors }/>
             </Group>
           ) ) }
@@ -169,7 +211,7 @@ class Palazzo extends React.Component {
               <Check name="stairs" value={ this.state.towerProps.stairs } func={ this.update.towerProps } />
               <Check name="columns" value={ this.state.towerProps.columns } func={ this.update.towerProps } />
               <Check name="balcony" value={ this.state.towerProps.balcony } func={ this.update.towerProps } />
-              <Range name="windows" min="0" max="5" value={ this.state.towerProps.windows } func={ this.update.towerProps } />
+              <Range display={null} name="windows" min="0" max="5" value={ this.state.towerProps.windows } func={ this.update.towerProps } />
               <Range name="windowsType" min="1" max="5" value={ this.state.towerProps.windowsType } func={ this.update.towerProps } />
               <Range name="roof" min="0" max="3" value={ this.state.towerProps.roof } func={ this.update.towerProps } />
             </Group>

@@ -5,7 +5,8 @@ import Structure from './structure';
 
 const Building = ( props ) => {
 
-	let width = ( 1 + ( props.width * 2 ) );
+	let width = 1 + ( props.width * 2 );
+	let facade = 1 + ( props.facade * 2 );
 
 	let towers = Array( Number( props.towers ) ).fill( null ).map( ( _, t ) => {
 		let floors = props.floors.length + Number( props.towerProps.floors );
@@ -32,6 +33,7 @@ const Building = ( props ) => {
           unit={ props.unit }
           wall={ props.wall }
           decoration={ props.decoration }
+          stroke={ props.stroke }
           width={ 1 }
           stairs={ t.stairs }
           roof={ t.roof }
@@ -44,10 +46,12 @@ const Building = ( props ) => {
         unit={ props.unit }
         wall={ props.wall }
         decoration={ props.decoration }
+        stroke={ props.stroke }
         width={ width }
         stairs={ props.stairs }
         roof={ props.roof }
         floors={ props.floors }
+        windows={ props.floorWindows }
       />
 
       { props.facade > 0 && (
@@ -56,10 +60,12 @@ const Building = ( props ) => {
           unit={ props.unit }
           wall={ props.decoration }
           decoration={ props.decoration }
-          width={ 1 + props.facade }
+          stroke={ props.stroke }
+          width={ facade }
           stairs={ true }
           roof={ 3 }
           floors={ props.facadeFloors }
+          windows={ props.facadeWindows }
         />
       ) }
 
