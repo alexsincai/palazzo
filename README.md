@@ -14,5 +14,4 @@ They look like this:
 
 ## Todo
 
-* Fix the randomizer (sometimes throws errors)
 * Add the towers

@@ -94,7 +94,7 @@ class Palazzo extends React.Component {
 		let svg = document.querySelector( 'svg' );
 		let rect = svg.getBBox();
 		let maxDim = Math.max( window.outerWidth, window.outerHeight );
-		let scale = Math.round( maxDim / Math.max( rect.width, rect.height ) ) / 2;
+		let scale = Math.round( maxDim / Math.max( rect.width, rect.height ) ) / 4;
 
 		saveSvgAsPng( svg, `palazzo-${ Date.now() }.png`, {
 			scale
@@ -106,6 +106,9 @@ class Palazzo extends React.Component {
 
 		let w = util.random( 3, 9 );
 		let f = util.random( 0, 3 );
+
+		let ww = util.minmax( 1 + ( w * 2 ) ).length - 1;
+		let fw = util.minmax( 1 + ( f * 2 ) ).length - 1;
 
 		let s = {
 			color: util.generateRandomColor(),
@@ -121,18 +124,22 @@ class Palazzo extends React.Component {
 			s.floors.push( {
 				columns: !!util.random( 0, 1 ),
 				balcony: !!util.random( 0, 1 ),
-				windows: util.random( 1, 4 ),
+				windows: util.random( 1, ww ),
 				windowsType: util.random( 1, 5 )
 			} );
 			s.facadeFloors.push( {
 				columns: !!util.random( 0, 1 ),
 				balcony: !!util.random( 0, 1 ),
-				windows: util.random( 1, 4 ),
+				windows: util.random( 1, fw ),
 				windowsType: util.random( 1, 5 )
 			} );
 		}
 
 		this.setState( s );
+	}
+
+	componentWillMount() {
+		this.randomize();
 	}
 
 	render() {
