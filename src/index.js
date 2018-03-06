@@ -121,18 +121,16 @@ class Palazzo extends React.Component {
 			s.floors.push( {
 				columns: !!util.random( 0, 1 ),
 				balcony: !!util.random( 0, 1 ),
-				windows: util.random( 0, 4 ),
+				windows: util.random( 1, 4 ),
 				windowsType: util.random( 1, 5 )
 			} );
 			s.facadeFloors.push( {
 				columns: !!util.random( 0, 1 ),
 				balcony: !!util.random( 0, 1 ),
-				windows: util.random( 0, 4 ),
+				windows: util.random( 1, 4 ),
 				windowsType: util.random( 1, 5 )
 			} );
 		}
-
-		// console.log( ww, fw )
 
 		this.setState( s );
 	}
