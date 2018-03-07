@@ -18,15 +18,31 @@ import Building from './components/building';
 
 const unit = 5;
 
+const cleanProps = ( object ) => {
+	let o = Object.assign( {}, object );
+
+	o.width = o.width * 2 + 1;
+
+	if ( o.facadeWidth > 0 )
+		o.facadeWidth = o.facadeWidth * 2 + 1;
+
+	delete o.editing;
+	// delete o.color.color;
+	delete o.towers;
+	delete o.towerProps;
+
+	return o;
+}
+
 class Palazzo extends React.Component {
 	state = {
 		editing: false,
 		color: util.generateRandomColor(),
 		width: 4,
 		stairs: false,
-		roof: 1,
+		roof: 0,
 		floors: [ {
-			columns: false,
+			columns: true,
 			balcony: false,
 			windows: 1,
 			windowsType: 1
@@ -40,6 +56,7 @@ class Palazzo extends React.Component {
 		} ],
 		towers: 0,
 		towerProps: {
+			width: 3,
 			floors: 1,
 			stairs: true,
 			columns: false,
@@ -139,30 +156,19 @@ class Palazzo extends React.Component {
 	}
 
 	componentWillMount() {
-		this.randomize();
+		// this.randomize();
 	}
 
 	render() {
-		let maxTowers = ( this.state.width * 2 ) - 1;
 
-		let towers = maxTowers <= this.state.towers ? maxTowers : this.state.towers;
-
-		let floorWindows = util.minmax( 1 + ( this.state.width * 2 ) );
-		let facadeWindows = util.minmax( 1 + ( this.state.facadeWidth * 2 ) );
+		let floorWindows = util.minmax( this.state.width * 2 + 1 );
 
 		return (
 			<div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <Defs
-            unit={ unit }
-            floorWidth={ this.state.width }
-            floorId="building"
-            facadeWidth={ this.state.facadeWidth }
-            facadeId="facade"
-            light={ this.state.color.light }
-            dark={ this.state.color.dark }
-          />
-          <Building
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -100 100 100">
+          <Defs unit={ unit } />
+          <Building unit={ unit } { ...cleanProps( this.state ) } />
+          {/* <Building
             unit={ unit }
             decoration={ this.state.color.light }
             wall={ this.state.color.mid }
@@ -177,7 +183,7 @@ class Palazzo extends React.Component {
             facadeWindows={ facadeWindows }
             towers={ this.state.towers }
             towerProps={ this.state.towerProps }
-          />
+          /> */}
         </svg>
         <div className="buttons">
           <button onClick={ (e) => document.querySelector('.editing').classList.toggle('hidden') }>Edit</button>
@@ -198,7 +204,7 @@ class Palazzo extends React.Component {
             <Group key={ ff } name={ `Floor ${ ff + 1 }` }>
               <Check set="floors" name="columns" index={ ff } value={ f.columns } func={ this.update.floors } />
               <Check set="floors" name="balcony" index={ ff } value={ f.balcony } func={ this.update.floors } />
-              <Range display={ floorWindows } set="floors" name="windows" index={ ff } min="0" max={ floorWindows.length - 1 } value={ Math.min( f.windows, floorWindows.length - 1 ) } func={ this.update.floors } />
+              <Range display={ floorWindows } set="floors" name="windows" index={ ff } min="0" max="4" value={ Math.min( f.windows, floorWindows.length - 1 ) } func={ this.update.floors } />
               <Range set="floors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors } />
             </Group>
           ) ) }
@@ -206,7 +212,7 @@ class Palazzo extends React.Component {
             <Group key={ ff } name={ `Facade floor ${ ff + 1 }` }>
               <Check set="facadeFloors" name="columns" index={ ff } value={ f.columns } func={ this.update.floors } />
               <Check set="facadeFloors" name="balcony" index={ ff } value={ f.balcony } func={ this.update.floors } />
-              <Range display={ facadeWindows } set="facadeFloors" name="windows" index={ ff } min="0" max={ facadeWindows.length - 1 } value={ Math.min( f.windows, facadeWindows.length - 1 ) } func={ this.update.floors } />
+              {/* <Range display={ facadeWindows } set="facadeFloors" name="windows" index={ ff } min="0" max={ facadeWindows.length - 1 } value={ Math.min( f.windows, facadeWindows.length - 1 ) } func={ this.update.floors } /> */}
               <Range set="facadeFloors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors }/>
             </Group>
           ) ) }

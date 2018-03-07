@@ -1,39 +1,53 @@
 import React from 'react';
 
 import Base from './base';
-import Floors from './floors';
+import Floor from './floor';
 import Roof from './roof';
 
 const Structure = ( props ) => {
 
+	let groupProps = {
+		id: props.id,
+		fill: props.light,
+		stroke: props.dark,
+		strokeWidth: props.strokeWidth,
+	}
+
+	let commonProps = {
+		unit: props.unit,
+		width: props.width,
+		stroke: props.dark,
+	}
+
+	let baseProps = Object.assign( {}, commonProps, {
+		id: `${ props.id }-base`,
+		stairs: props.stairs,
+	} );
+
+	let roofProps = Object.assign( {}, commonProps, {
+		id: `${ props.id }-roof`,
+		vertical: ( props.floors.length * 2 ) + 1,
+		roof: props.roof,
+	} );
+
 	return (
-		<g id={ props.id }>
-      <Base
-        id={ `${ props.id }-base` }
-        unit={ props.unit }
-        width={ props.width }
-        stairs={ props.stairs }
-        fill={ props.decoration }
-      />
-      <Floors
-        id={ props.id }
-        unit={ props.unit }
-        width={ props.width }
-        floors={ props.floors }
-        windows={ props.windows }
-        fill={ props.wall }
-      />
-      <Roof
-        id={ props.id }
-        unit={ props.unit }
-        width={ props.width }
-        floors={ props.floors.length }
-        roof={ props.roof }
-        light={ props.decoration }
-        dark={ props.stroke }
-      />
+		<g { ...groupProps }>
+      <Base { ...baseProps } />
+      { props.floors.map( ( f, ff ) => (
+        <Floor
+          key={ ff }
+          fill={ props.mid }
+          stroke={ props.dark }
+          id={ `${ props.id }-floor-${ ff + 1 }` }
+          unit={ props.unit }
+          width={ props.width }
+          floor={ f }
+          index={ ff }
+        />
+      ) ) }
+      <Roof { ...roofProps } />
     </g>
-	);
+	)
 }
 
 export default Structure;
