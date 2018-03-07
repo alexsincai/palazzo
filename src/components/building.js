@@ -11,7 +11,7 @@ const Building = ( props ) => {
 	}
 
 	let buildingProps = Object.assign( {}, commonProps, {
-		id: 'building',
+		id: 'body',
 		light: props.color.light,
 		mid: props.color.mid,
 		dark: props.color.dark,
@@ -21,8 +21,22 @@ const Building = ( props ) => {
 		roof: props.roof,
 	} );
 
+	let facadeProps = Object.assign( {}, buildingProps, {
+		id: 'facade',
+		width: props.facadeWidth,
+		mid: props.color.light,
+		stairs: true,
+		floors: props.facadeFloors,
+		roof: 3,
+	} );
+
 	return (
-		<Structure { ...buildingProps }></Structure>
+		<g id="building">
+      <Structure { ...buildingProps }></Structure>
+      { props.facadeWidth > 0 && (
+        <Structure { ...facadeProps }></Structure>
+      ) }
+    </g>
 	)
 
 	// let width = 1 + ( props.width * 2 );

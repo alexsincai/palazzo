@@ -1,7 +1,6 @@
 import React from 'react';
 import util from '../util';
 
-// import Windows from './windows';
 import Balcony from './balcony';
 
 const Floor = ( props ) => {
@@ -13,17 +12,20 @@ const Floor = ( props ) => {
 	let y = props.unit + ( props.unit * 2 ) * props.index;
 
 
-	let columns = util.place( props.width + 1, props.floor.columns, width, 1, props.unit * 0.0 );
-	// let columns = util.place( props.width + 1, props.floor.columns, width, 1, props.unit * 0.2 );
+	let columns = util.place( props.width + 1, props.floor.columns, width, 1, props.unit * 0.2 );
 	let windows = util.windows( props.width, props.floor.windows, props.unit ).map( w => props.unit * w + x + ( props.unit * 0.5 ) );
 
 	return (
 		<g id={ props.id }>
       <rect x={ x } y={ -wy } width={ width } height={ height } fill={ props.fill } />
 
-      { windows.map( ( w, ww ) => (
-        <use key={ ww } href={ `#window-${ props.floor.windowsType }` } x={ w } y={ -y } fill={ props.stroke } />
-      ) ) }
+      { windows.length > 0 && (
+        <g id={ `${ props.id }-windows` }>
+          { windows.map( ( w, ww ) => (
+            <use key={ ww } href={ `#window-${ props.floor.windowsType }` } x={ w } y={ -y } fill={ props.stroke } />
+          ) ) }
+        </g>
+      ) }
 
       <Balcony
         id={ `${ props.id }-balcony` }

@@ -4,7 +4,6 @@ import util from '../util';
 import Balcony from './balcony'
 
 const Roof = ( props ) => {
-	console.log( props )
 
 	let width = props.width * props.unit;
 	let height = ( props.unit * 2 );

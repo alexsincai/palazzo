@@ -39,11 +39,11 @@ class Palazzo extends React.Component {
 		editing: false,
 		color: util.generateRandomColor(),
 		width: 4,
-		stairs: false,
-		roof: 0,
+		stairs: true,
+		roof: 2,
 		floors: [ {
-			columns: true,
 			balcony: false,
+			columns: true,
 			windows: 1,
 			windowsType: 1
 		} ],
@@ -108,13 +108,11 @@ class Palazzo extends React.Component {
 	}
 
 	save = ( e ) => {
-		let svg = document.querySelector( 'svg' );
-		let rect = svg.getBBox();
-		let maxDim = Math.max( window.outerWidth, window.outerHeight );
-		let scale = Math.round( maxDim / Math.max( rect.width, rect.height ) ) / 4;
-
-		saveSvgAsPng( svg, `palazzo-${ Date.now() }.png`, {
-			scale
+		saveSvgAsPng( document.querySelector( 'svg' ), `palazzo-${ Date.now() }.png`, {
+			top: -100,
+			left: -50,
+			scale: 5,
+			encoderOptions: 1,
 		} );
 	}
 
@@ -162,28 +160,14 @@ class Palazzo extends React.Component {
 	render() {
 
 		let floorWindows = util.minmax( this.state.width * 2 + 1 );
+		let facadeWindows = util.minmax( this.state.facadeWidth * 2 + 1 );
 
 		return (
 			<div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -100 100 100">
+        {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -100 100 100"> */}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -100 100 100" width="800" height="600">
           <Defs unit={ unit } />
           <Building unit={ unit } { ...cleanProps( this.state ) } />
-          {/* <Building
-            unit={ unit }
-            decoration={ this.state.color.light }
-            wall={ this.state.color.mid }
-            stroke={ this.state.color.dark }
-            width={ this.state.width }
-            stairs={ this.state.stairs }
-            roof={ this.state.roof }
-            floors={ this.state.floors }
-            floorWindows={ floorWindows }
-            facade={ this.state.facadeWidth }
-            facadeFloors={ this.state.facadeFloors }
-            facadeWindows={ facadeWindows }
-            towers={ this.state.towers }
-            towerProps={ this.state.towerProps }
-          /> */}
         </svg>
         <div className="buttons">
           <button onClick={ (e) => document.querySelector('.editing').classList.toggle('hidden') }>Edit</button>
@@ -212,7 +196,7 @@ class Palazzo extends React.Component {
             <Group key={ ff } name={ `Facade floor ${ ff + 1 }` }>
               <Check set="facadeFloors" name="columns" index={ ff } value={ f.columns } func={ this.update.floors } />
               <Check set="facadeFloors" name="balcony" index={ ff } value={ f.balcony } func={ this.update.floors } />
-              {/* <Range display={ facadeWindows } set="facadeFloors" name="windows" index={ ff } min="0" max={ facadeWindows.length - 1 } value={ Math.min( f.windows, facadeWindows.length - 1 ) } func={ this.update.floors } /> */}
+              <Range display={ facadeWindows } set="facadeFloors" name="windows" index={ ff } min="0" max={ facadeWindows.length - 1 } value={ Math.min( f.windows, facadeWindows.length - 1 ) } func={ this.update.floors } />
               <Range set="facadeFloors" name="windowsType" index={ ff } min="1" max="5" value={ f.windowsType } func={ this.update.floors }/>
             </Group>
           ) ) }
