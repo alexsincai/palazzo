@@ -7,7 +7,7 @@ const util = {
 		return null;
 	} ).filter( v => v ),
 	// round: ( v, d = 3 ) => Math.floor( v * Math.pow( 10, d ) ) / Math.pow( 10, d ),
-	// clean: ( text ) => text.replace( /\s+/g, ' ' ).trim(),
+	clean: ( text ) => text.replace( /\s+/g, ' ' ).trim(),
 	// uniq: ( arr ) => [ ...new Set( arr ) ],
 	random: ( min = 0, max = 1 ) => Math.floor( Math.random() * ( max - min + 1 ) + min ),
 	minmax: ( x ) => [ 0, 1, Math.floor( x / 2 ), Math.ceil( x / 2 ), x ],
