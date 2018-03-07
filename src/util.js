@@ -6,9 +6,8 @@ const util = {
 			return util.map( c, 0, ( count * mul ) - 1, ( width - fit ) * -0.5, ( width - fit ) * 0.5 )
 		return null;
 	} ).filter( v => v ),
-	// round: ( v, d = 3 ) => Math.floor( v * Math.pow( 10, d ) ) / Math.pow( 10, d ),
 	clean: ( text ) => text.replace( /\s+/g, ' ' ).trim(),
-	// uniq: ( arr ) => [ ...new Set( arr ) ],
+	uniq: ( arr ) => [ ...new Set( arr ) ],
 	random: ( min = 0, max = 1 ) => Math.floor( Math.random() * ( max - min + 1 ) + min ),
 	minmax: ( x ) => [ 0, 1, Math.ceil( x / 2 ), Math.floor( x / 2 ), x ],
 	windows: ( count, pos = 4 ) => {

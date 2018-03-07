@@ -4,7 +4,8 @@ const Base = ( props ) => {
 
 	let width = props.width * props.unit;
 	let height = props.unit;
-	let x = width * -0.5;
+	let horizontal = props.offset || 0;
+	let x = ( width * -0.5 ) + horizontal;
 	let y = -height;
 
 	if ( props.stairs ) {

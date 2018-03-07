@@ -6,8 +6,8 @@ import Balcony from './balcony'
 const Roof = ( props ) => {
 
 	let width = props.width * props.unit;
-	let height = ( props.unit * 2 );
-	let x = width * -0.5;
+	let horizontal = props.offset || 0;
+	let x = ( width * -0.5 ) + horizontal;
 	let y = -props.unit * props.vertical;
 
 	if ( props.roof === 0 )
@@ -15,17 +15,25 @@ const Roof = ( props ) => {
 
 	if ( props.roof === 1 )
 		return (
-			<Balcony id={ props.id } width={ props.width } balcony={ true } unit={ props.unit } x={ x } y={ y } />
+			<Balcony
+        id={ props.id }
+        width={ props.width }
+        balcony={ true }
+        unit={ props.unit }
+        x={ x }
+        y={ y }
+        offset={ horizontal }
+   />
 		);
 
 	if ( props.roof === 2 )
 		return (
 			<g id={ props.id } fill={ props.stroke }>
         <path d={ util.clean(`
-          M -${ ( width + props.unit ) / 2 } ${ y }
-          l ${ props.unit } -${ props.unit / 2 }
+          M ${ ( width + props.unit ) * -0.5 + horizontal } ${ y }
+          l ${ props.unit } -${ props.unit * 0.5 }
           h ${ width - props.unit }
-          l ${ props.unit } ${ props.unit / 2 }
+          l ${ props.unit } ${ props.unit * 0.5 }
           z
         `) } />
       </g>
@@ -35,9 +43,9 @@ const Roof = ( props ) => {
 		return (
 			<g id={ props.id }>
         <path d={ util.clean(`
-          M -${ ( width + props.unit ) / 2 } ${ y }
-          l ${ ( width + props.unit ) / 2 } -${ width / 4 }
-          l ${ ( width + props.unit ) / 2 } ${ width / 4 }
+          M ${ ( width + props.unit ) * -0.5 + horizontal } ${ y }
+          l ${ ( width + props.unit ) * 0.5 } -${ width * 0.25 }
+          l ${ ( width + props.unit ) * 0.5 } ${ width * 0.25 }
           z
         `) } />
       </g>

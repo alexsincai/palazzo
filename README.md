@@ -1,20 +1,15 @@
 # Palazzo
 
-Creates pastel-colored, Italian-looking palazzi.
+Creates pastel-colored, Italian-looking palazzi, heavilly inspired by [23's *Palladian Facade Generator*](https://23.itch.io/palladio).
 
 They look like this:
 
-![](https://i.imgur.com/7wd4Iq2.png)
+![](https://i.imgur.com/dGmhc9Y.png)
 
-![](https://i.imgur.com/NtYrDoY.png)
+![](https://i.imgur.com/zV96aN0.png)
 
-![](https://i.imgur.com/nKbLyN1.png)
+![](https://i.imgur.com/2eWLZdL.png)
 
-![](https://i.imgur.com/LB8s1SM.png)
+![](https://i.imgur.com/OnlJJPm.png)
 
-![](https://i.imgur.com/cktL0je.png)
-
-
-## Todo
-
-* Add the towers
+![](https://i.imgur.com/yKjuS7r.png)

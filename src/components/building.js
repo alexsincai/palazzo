@@ -1,9 +1,16 @@
 import React from 'react';
-// import util from '../util';
+import util from '../util';
 
 import Structure from './structure';
 
 const Building = ( props ) => {
+
+	let groupProps = {
+		id: props.id,
+		fill: props.color.light,
+		stroke: props.color.dark,
+		strokeWidth: 0.2,
+	}
 
 	let commonProps = {
 		unit: props.unit,
@@ -15,7 +22,6 @@ const Building = ( props ) => {
 		light: props.color.light,
 		mid: props.color.mid,
 		dark: props.color.dark,
-		strokeWidth: 0.2,
 		stairs: props.stairs,
 		floors: props.floors,
 		roof: props.roof,
@@ -30,81 +36,35 @@ const Building = ( props ) => {
 		roof: 3,
 	} );
 
+	let towerProps = Object.assign( {}, buildingProps, {
+		width: 3,
+		mid: props.color.light,
+		floors: Array( props.floors.length + props.towerProps.floors ).fill( {
+			balcony: props.towerProps.balcony,
+			columns: props.towerProps.columns,
+			windows: props.towerProps.windows,
+			windowsType: props.towerProps.windowsType
+		} ),
+		stairs: true,
+		roof: props.towerProps.roof
+	} );
+
+	let towers = Array( props.towers ).fill( null ).map( ( _, tt ) => Object.assign( {}, towerProps, {
+		id: `tower-${ tt + 1 }`,
+		offset: util.map( tt, 0, props.towers - 1, ( -0.5 * props.width ), ( 0.5 * props.width ) ) || 0,
+	} ) );
+
 	return (
-		<g id="building">
-      <Structure { ...buildingProps }></Structure>
+		<g { ...groupProps }>
+      { props.towers > 0 && towers.map( ( t, tt ) => (
+        <Structure key={ tt } { ...t } />
+      ) ) }
+      <Structure { ...buildingProps } />
       { props.facadeWidth > 0 && (
-        <Structure { ...facadeProps }></Structure>
+        <Structure { ...facadeProps } />
       ) }
     </g>
-	)
-
-	// let width = 1 + ( props.width * 2 );
-	// let facade = 1 + ( props.facade * 2 );
-	//
-	// let towers = Array( Number( props.towers ) ).fill( null ).map( ( _, t ) => {
-	// 	let floors = props.floors.length + Number( props.towerProps.floors );
-	// 	return {
-	// 		width: 1,
-	// 		stairs: props.towerProps.stairs,
-	// 		roof: props.towerProps.roof,
-	// 		floors: Array( floors ).fill( {
-	// 			columns: props.towerProps.columns,
-	// 			balcony: props.towerProps.balcony,
-	// 			windows: props.towerProps.windows,
-	// 			windowsType: props.towerProps.windowsType
-	// 		} )
-	// 	}
-	// } );
-	//
-	// return (
-	// 	<g id="building" stroke={ props.stroke } strokeWidth="0.1">
-	//
-	//     { towers.map( ( t, tt ) => (
-	//       <Structure
-	//         key={ tt }
-	//         id={ `tower-${ tt + 1 }` }
-	//         unit={ props.unit }
-	//         wall={ props.wall }
-	//         decoration={ props.decoration }
-	//         stroke={ props.stroke }
-	//         width={ 1 }
-	//         stairs={ t.stairs }
-	//         roof={ t.roof }
-	//         floors={ t.floors }
-	//       />
-	//     ) ) }
-	//
-	//     <Structure
-	//       id="building"
-	//       unit={ props.unit }
-	//       wall={ props.wall }
-	//       decoration={ props.decoration }
-	//       stroke={ props.stroke }
-	//       width={ width }
-	//       stairs={ props.stairs }
-	//       roof={ props.roof }
-	//       floors={ props.floors }
-	//       windows={ props.floorWindows }
-	//     />
-	//
-	//     { props.facade > 0 && (
-	//       <Structure
-	//         id="facade"
-	//         unit={ props.unit }
-	//         wall={ props.decoration }
-	//         decoration={ props.decoration }
-	//         stroke={ props.stroke }
-	//         width={ facade }
-	//         stairs={ true }
-	//         roof={ 3 }
-	//         floors={ props.facadeFloors }
-	//         windows={ props.facadeWindows }
-	//       />
-	//     ) }
-	//
-	//   </g>
-	// );
+	);
 }
 
 export default Building;
